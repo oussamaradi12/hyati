@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قصيدة نزار قباني</title>
+  <style>
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      font-family: 'Amiri', serif;
+      background: radial-gradient(circle, #ffe5d9, #fad4c0);
+      text-align: center;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      padding: 5vw;
+      color: #6e3f46;
+    }
+
+    h1 {
+      font-size: 7vw;
+      margin-bottom: 5vw;
+    }
+
+    p {
+      font-size: 5vw;
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .image-container {
+      margin-top: 5vw;
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #b35467;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div class="content">
+    <h1>أنتِ قصيدتي الجميلة، وكل حروفي تبدأ بكِ وتنتهي بكِ."</h1>
+    <p>
+      أشهد أن لا امرأة<br>
+      قد أخذت من اهتمامي نصف ما أخذتِ<br>
+      واستعمرتني مثلما فعلتِ<br>
+      وحررتني مثلما فعلتِ
+    </p>
+    <div class="image-container">
+      <img src="bouchra.webp" alt="صورة الحبيبة">
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const hearts = [];
+    const heartCount = 30;
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    for (let i = 0; i < heartCount; i++) {
+      hearts.push({
+        x: random(0, canvas.width),
+        y: random(0, canvas.height),
+        size: random(10, 20),
+        speed: random(1, 3),
+        alpha: random(0.5, 1),
+      });
+    }
+
+    function drawHeart(x, y, size, alpha) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 50, size / 50);
+      ctx.beginPath();
+      ctx.globalAlpha = alpha;
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(25, -25, 50, 25, 0, 50);
+      ctx.bezierCurveTo(-50, 25, -25, -25, 0, 0);
+      ctx.fillStyle = "rgba(255, 50, 100, 1)";
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (const heart of hearts) {
+        drawHeart(heart.x, heart.y, heart.size, heart.alpha);
+        heart.y -= heart.speed;
+        heart.alpha -= 0.01;
+
+        if (heart.alpha <= 0) {
+          heart.x = random(0, canvas.width);
+          heart.y = canvas.height + 50;
+          heart.size = random(10, 20);
+          heart.speed = random(1, 3);
+          heart.alpha = random(0.5, 1);
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
